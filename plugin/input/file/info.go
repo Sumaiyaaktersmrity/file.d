@@ -36,10 +36,16 @@ func (ir *InfoRegistry) Info(w http.ResponseWriter, _ *http.Request) {
 
 	_, _ = w.Write([]byte(jobsInfo))
 
-	watcherInfo := logger.Header("watch_dirs")
+	watcherInfo := logger.Header("watch_paths")
+	for _, source := range ir.plug.jobProvider.watcher.basePaths {
+		watcherInfo += fmt.Sprintf(
+			"%s\n",
+			source,
+		)
+	}
 	watcherInfo += fmt.Sprintf(
-		"%s\n",
-		ir.plug.jobProvider.watcher.path,
+		"commonPath: %s\n",
+		ir.plug.jobProvider.watcher.commonPath,
 	)
 	_, _ = w.Write([]byte(watcherInfo))
 
